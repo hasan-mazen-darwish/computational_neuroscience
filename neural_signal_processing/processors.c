@@ -44,6 +44,27 @@ double *average_spikes(int *data, unsigned int window, size_t size) {
   return result;
 }
 
+// This function will take the window (the window is the number of the spikes
+// will be computed) and then will average the spikes in it, and attach the
+// value to the first spike in the window
+double *sliding_window_averaging(int *data, unsigned int window, size_t size) {
+  double *result = malloc(size * sizeof(data));
+  if (result == NULL) {
+    return NULL;
+  }
+  double sum = 0.0;
+
+  for (int i = 0; i < window && i < size; i++)
+    sum += data[i];
+  for (int i = 0; i < size; i++) {
+    result[i] = sum / window;
+    sum -= data[i];
+    if (i + window < size)
+      sum += data[i + window];
+  }
+  return result;
+}
+
 // A function used for freeing any allocation result after finishing
 void free_pointer(void *pointer) {
   free(pointer);
